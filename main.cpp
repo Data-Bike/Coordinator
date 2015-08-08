@@ -23,7 +23,7 @@ int main(int argc, char** argv) {
     config.insert(std::pair<std::string, std::string>("len_block", "1024"));
     ::coordinator::coordinator * c = new ::coordinator::coordinator(config);
     c->play();
-    system("pause");
+    cin.get();
     return 0;
 }
 

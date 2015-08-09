@@ -71,7 +71,7 @@ void askrequesttest() {
         std::map <std::string, std::string> config;
         config.insert(std::pair<std::string, std::string>("port", "12345"));
         config.insert(std::pair<std::string, std::string>("clients", "12345"));
-        config.insert(std::pair<std::string, std::string>("threadscount", "1"));
+        config.insert(std::pair<std::string, std::string>("threadscount", "2"));
         config.insert(std::pair<std::string, std::string>("len_block", "1024"));
         std::cout<<"cofig inited"<<std::endl;
         coordinator::coordinator* coord = new coordinator::coordinator(config);
@@ -84,6 +84,7 @@ void askrequesttest() {
         sa.sin_family = AF_INET;
         sa.sin_port = htons(std::atoi(config["port"].c_str()));
         ::inet_aton("127.0.0.1", &sa.sin_addr);
+//        ::inet_aton("188.40.41.20", &sa.sin_addr);
         std::cout<<"address inited"<<std::endl;
         int res_con = ::connect(s_test, (sockaddr*)&sa, sizeof (sa));
         std::cout << "connect result:" << res_con << std::endl;

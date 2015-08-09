@@ -42,6 +42,10 @@ namespace socketserver {
         virtual void doClient(sockaddr_in address, int s_client);
 
         virtual ~socketserver();
+    protected:
+
+        virtual void addClient(int s_client);
+        virtual void removeClient(int s_client);
     private:
         static void doThread(int id_thread, socketserver* self);
         vector<int> sockets;

@@ -6,6 +6,7 @@
  */
 
 #include <iostream>
+#include <bits/algorithmfwd.h>
 
 #include "socketserver.h"
 namespace socketserver {
@@ -56,7 +57,9 @@ namespace socketserver {
         for (thread* &th : this->threads) {
             th->join();
         }
+        std::cout << "all threads join to main" << std::endl;
         ::close(this->s_server);
+        std::cout << "close server socket" << std::endl;
 
     }
 
@@ -84,6 +87,11 @@ namespace socketserver {
             buf.resize(len_recv);
             recv_data.insert(recv_data.end(), buf.begin(), buf.end());
         }
+        if (len_recv < 0) {
+            std::cout << "read failed remove client:" << s_recv << std::endl;
+            this->removeClient(s_recv);
+            return recv_data;
+        }
         std::cout << "read ok:" << recv_data.size() << std::endl;
         this->onRead(s_recv, recv_data);
         this->doRead(s_recv, recv_data);
@@ -95,6 +103,10 @@ namespace socketserver {
         int len_recv = 0;
         if (::recv(s_recv, &recv_data[0], size, 0) == size) {
             std::cout << "read ok:" << recv_data.size() << std::endl;
+        } else {
+            std::cout << "read failed remove client:" << s_recv << std::endl;
+            this->removeClient(s_recv);
+            return recv_data;
         }
         this->onRead(s_recv, recv_data);
         this->doRead(s_recv, recv_data);
@@ -176,6 +188,18 @@ namespace socketserver {
     }
 
     void socketserver::doClient(sockaddr_in address, int s_client) {
+        //        this->sockets.insert(this->sockets.end(), s_client);
+        //        mutex *buf_m = new mutex();
+        //        std::pair<int, mutex*>buf(s_client, (mutex*) buf_m);
+        //
+        //        this->guards.insert(this->guards.end(), buf);
+        //        mutex *buf_m_w = new mutex();
+        //        std::pair<int, mutex*>buf_w(s_client, (mutex*) buf_m_w);
+        //        this->write_guards.insert(this->guards.end(), buf_w);
+        this->addClient(s_client);
+    }
+
+    void socketserver::addClient(int s_client) {
         this->sockets.insert(this->sockets.end(), s_client);
         mutex *buf_m = new mutex();
         std::pair<int, mutex*>buf(s_client, (mutex*) buf_m);
@@ -184,6 +208,17 @@ namespace socketserver {
         mutex *buf_m_w = new mutex();
         std::pair<int, mutex*>buf_w(s_client, (mutex*) buf_m_w);
         this->write_guards.insert(this->guards.end(), buf_w);
+
+    }
+
+    void socketserver::removeClient(int s_client) {
+        std::cout << "socketserver::removeClient(" << s_client << ")" << std::endl;
+        this->sockets.erase(find(this->sockets.begin(), this->sockets.end(), s_client));
+        std::cout << "erased socket" << std::endl;
+        this->guards.erase(this->guards.find(s_client));
+        std::cout << "erased guard" << std::endl;
+        this->write_guards.erase(this->write_guards.find(s_client));
+        std::cout << "erased write_guard" << std::endl;
     }
 
     socketserver::~socketserver() {

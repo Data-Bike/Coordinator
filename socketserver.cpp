@@ -212,6 +212,7 @@ namespace socketserver {
     }
 
     void socketserver::removeClient(int s_client) {
+        this->guard_s_server.lock();
         std::cout << "socketserver::removeClient(" << s_client << ")" << std::endl;
         this->sockets.erase(find(this->sockets.begin(), this->sockets.end(), s_client));
         std::cout << "erased socket" << std::endl;
@@ -219,6 +220,7 @@ namespace socketserver {
         std::cout << "erased guard" << std::endl;
         this->write_guards.erase(this->write_guards.find(s_client));
         std::cout << "erased write_guard" << std::endl;
+        this->guard_s_server.unlock();
     }
 
     socketserver::~socketserver() {

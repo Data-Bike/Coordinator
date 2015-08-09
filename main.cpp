@@ -20,7 +20,7 @@ int main(int argc, char** argv) {
     std::map <std::string, std::string> config;
     config.insert(std::pair<std::string, std::string>("port", "12345"));
     config.insert(std::pair<std::string, std::string>("clients", "12345"));
-    config.insert(std::pair<std::string, std::string>("threadscount", "1"));
+    config.insert(std::pair<std::string, std::string>("threadscount", "2"));
     config.insert(std::pair<std::string, std::string>("len_block", "1024"));
     cout<<"Inited"<<endl;
     ::coordinator::coordinator * c = new ::coordinator::coordinator(config);

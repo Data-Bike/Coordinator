@@ -83,8 +83,8 @@ void askrequesttest() {
         sockaddr_in sa;
         sa.sin_family = AF_INET;
         sa.sin_port = htons(std::atoi(config["port"].c_str()));
-        ::inet_aton("127.0.0.1", &sa.sin_addr);
-//        ::inet_aton("188.40.41.20", &sa.sin_addr);
+//        ::inet_aton("127.0.0.1", &sa.sin_addr);
+        ::inet_aton("188.40.41.20", &sa.sin_addr);
         std::cout<<"address inited"<<std::endl;
         int res_con = ::connect(s_test, (sockaddr*)&sa, sizeof (sa));
         std::cout << "connect result:" << res_con << std::endl;

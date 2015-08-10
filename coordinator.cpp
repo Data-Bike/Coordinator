@@ -20,10 +20,16 @@ namespace coordinator {
         parser parsed(data);
         if (parsed.to.size() == 0) {
             this->hash_guard->lock();
+            if (this->hashidsocket.find(parsed.from) != this->hashidsocket.end()) {
+                std::cout << "ever is hashid in hashidsocket:" << this->hashidsocket[parsed.from] << std::endl;
+                this->hashidsocket[parsed.from] = s_recv;
+                this->sockethashid[s_recv] = parsed.from;
+            }
             this->hashidsocket.insert(pair<vector<unsigned char>, int>(parsed.from, s_recv));
             this->sockethashid.insert(pair<int, vector<unsigned char>>(s_recv, parsed.from));
             this->hash_guard->unlock();
         } else {
+            std::cout << "write " << string(data.begin(), data.end()) << std::endl;
             this->write(this->hashidsocket[parsed.to], data);
         }
     }
@@ -38,17 +44,13 @@ namespace coordinator {
         socketserver::socketserver::read(s_client, *len_data);
     }
 
-    void coordinator::addClient(int s_client) {
-        socketserver::socketserver::addClient(s_client);
-    }
-
     void coordinator::removeClient(int s_client) {
-        socketserver::socketserver::removeClient(s_client);
-        std::cout << "socket removed" << std::endl;
-        this->hashidsocket.erase(this->hashidsocket.find(this->sockethashid[s_client]));
-        std::cout << "hashidsocket removed" << std::endl;
-        this->sockethashid.erase(this->sockethashid.find(s_client));
-        std::cout << "sockethashid removed" << std::endl;
+//        socketserver::socketserver::removeClient(s_client);
+//        std::cout << "socket removed" << std::endl;
+//        this->hashidsocket.erase(this->hashidsocket.find(this->sockethashid[s_client]));
+//        std::cout << "hashidsocket removed" << std::endl;
+//        this->sockethashid.erase(this->sockethashid.find(s_client));
+//        std::cout << "sockethashid removed" << std::endl;
 
     }
 

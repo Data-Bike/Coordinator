@@ -172,7 +172,7 @@ namespace socketserver {
             }
                         std::cout << "doThread circle max ok:" << mx << std::endl;
                         std::cout << "doThread circle FD_SETSIZE ok:" << FD_SETSIZE << std::endl;
-            if (::select(mx + 1, &readset, NULL, NULL, &timeout) < 1) {
+            if (::select(mx + 1, &readset, &writeset, &errorset, &timeout) < 1) {
                 std::cout << "::select(FD_SETSIZE, &readset, NULL, NULL, &timeout)<1" << std::endl;
                 continue;
             };
@@ -188,7 +188,7 @@ namespace socketserver {
                         std::cout << "doThread isset server ok" << std::endl;
             for (int client : this->sockets) {
                                 std::cout << "doThread circle to test client:" << client << std::endl;
-                if (FD_ISSET(client, &readset) && FD_ISSET(client, &writeset) && this->guards[client]->try_lock()) {
+                if (FD_ISSET(client, &readset) && FD_ISSET(client, &writeset) && !FD_ISSET(client, &errorset) && this->guards[client]->try_lock()) {
                     std::cout << "doThread circle to doSocket client:" << client << " thid:" << id_thread << std::endl;
                     this->doSocket(client);
                     this->guards[client]->unlock();

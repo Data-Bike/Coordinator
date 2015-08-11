@@ -172,7 +172,7 @@ namespace socketserver {
             }
             std::cout << "doThread circle max ok:" << mx << std::endl;
             std::cout << "doThread circle FD_SETSIZE ok:" << FD_SETSIZE << std::endl;
-            if (::select(mx + 1, &readset, &writeset, &errorset, &timeout) < 0) {
+            if (::select(mx + 1, &readset, &writeset, &errorset, &timeout) < 1) {
                 std::cout << "::select(FD_SETSIZE, &readset, NULL, NULL, &timeout)<1" << std::endl;
                                 continue;
             };

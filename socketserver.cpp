@@ -192,9 +192,9 @@ namespace socketserver {
                     std::cout << "doThread circle to doSocket client:" << client << " thid:" << id_thread << std::endl;
                     this->doSocket(client);
                     this->guards[client]->unlock();
-                } else if (!FD_ISSET(client, &writeset) || FD_ISSET(client, &errorset)) {
+                } else if (!FD_ISSET(client, &writeset)) {
                     std::cout << "removeClient" << std::endl;
-//                    this->removeClient(client);
+                    this->removeClient(client);
                 }
             }
             //std::cout << "doThread circle ok" << std::endl;

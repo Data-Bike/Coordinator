@@ -223,7 +223,7 @@ namespace socketserver {
         this->sockets.erase(remove(this->sockets.begin(), this->sockets.end(), s_client), this->sockets.end());
         this->guards.erase(s_client);
         this->write_guards.erase(s_client);
-        ::close(s_client);
+//        ::close(s_client);
         this->guard_s_server.unlock();
     }
 

@@ -50,15 +50,7 @@ namespace coordinator {
         }
     }
 
-    void coordinator::removeClient(int s_client) {
-        //        socketserver::socketserver::removeClient(s_client);
-        //        //std::cout << "socket removed" << std::endl;
-        //        this->hashidsocket.erase(this->hashidsocket.find(this->sockethashid[s_client]));
-        //        //std::cout << "hashidsocket removed" << std::endl;
-        //        this->sockethashid.erase(this->sockethashid.find(s_client));
-        //        //std::cout << "sockethashid removed" << std::endl;
 
-    }
 
     coordinator::~coordinator() {
     }

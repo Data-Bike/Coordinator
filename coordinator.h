@@ -26,7 +26,6 @@ namespace coordinator {
         void doSocket(int s_client);
         virtual ~coordinator();
     private:
-        void removeClient(int s_client);
         map <string, string> config;
         map <int, vector<unsigned char>> sockethashid;
         map <vector<unsigned char>, int> hashidsocket;

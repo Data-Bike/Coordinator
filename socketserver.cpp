@@ -136,18 +136,18 @@ namespace socketserver {
     }
 
     void socketserver::doThread(int id_thread) {
-                std::cout << "doThread init" << this->s_server << std::endl;
+        std::cout << "doThread init" << this->s_server << std::endl;
         fd_set readset, writeset, errorset;
         sockaddr_in c_addr;
         socklen_t lenaddr = sizeof (c_addr);
-                std::cout << "doThread init ok" << std::endl;
-                std::cout << "doThread started" << this->started << std::endl;
+        std::cout << "doThread init ok" << std::endl;
+        std::cout << "doThread started" << this->started << std::endl;
 
         while (this->started) {
             timeval timeout;
             timeout.tv_sec = 1;
             timeout.tv_usec = 0;
-                        std::cout << "doThread circle" << std::endl;
+            std::cout << "doThread circle" << std::endl;
             FD_ZERO(&readset);
             FD_ZERO(&writeset);
             FD_ZERO(&errorset);
@@ -160,23 +160,23 @@ namespace socketserver {
                     FD_SET(client, &errorset);
                 }
             }
-                        std::cout << "doThread circle set ok" << std::endl;
+            std::cout << "doThread circle set ok" << std::endl;
             int mx = 0;
-                        std::cout << "doThread circle start set mx" << std::endl;
+            std::cout << "doThread circle start set mx" << std::endl;
             if (this->sockets.size() > 0) {
-                                std::cout << "doThread circle this->sockets.size() > 0" << std::endl;
+                std::cout << "doThread circle this->sockets.size() > 0" << std::endl;
                 mx = std::max(this->s_server, *std::max_element(this->sockets.begin(), this->sockets.end()));
             } else {
                 std::cout << "doThread circle this->sockets.size() > 0 else" << std::endl;
                 mx = this->s_server;
             }
-                        std::cout << "doThread circle max ok:" << mx << std::endl;
-                        std::cout << "doThread circle FD_SETSIZE ok:" << FD_SETSIZE << std::endl;
+            std::cout << "doThread circle max ok:" << mx << std::endl;
+            std::cout << "doThread circle FD_SETSIZE ok:" << FD_SETSIZE << std::endl;
             if (::select(mx + 1, &readset, &writeset, &errorset, &timeout) < 1) {
                 std::cout << "::select(FD_SETSIZE, &readset, NULL, NULL, &timeout)<1" << std::endl;
                 continue;
             };
-                        std::cout << "doThread circle select ok" << std::endl;
+            std::cout << "doThread circle select ok" << std::endl;
             if (FD_ISSET(this->s_server, &readset) && this->guard_s_server.try_lock()) {
                 std::cout << "accepted client" << std::endl;
                 int s_client = ::accept(this->s_server, (sockaddr*) & c_addr, &lenaddr);
@@ -185,16 +185,19 @@ namespace socketserver {
                 this->doClient(c_addr, s_client);
                 this->guard_s_server.unlock();
             }
-                        std::cout << "doThread isset server ok" << std::endl;
+            std::cout << "doThread isset server ok" << std::endl;
             for (int client : this->sockets) {
-                                std::cout << "doThread circle to test client:" << client << std::endl;
+                std::cout << "doThread circle to test client:" << client << std::endl;
                 if (FD_ISSET(client, &readset) && FD_ISSET(client, &writeset) && !FD_ISSET(client, &errorset) && this->guards[client]->try_lock()) {
                     std::cout << "doThread circle to doSocket client:" << client << " thid:" << id_thread << std::endl;
                     this->doSocket(client);
                     this->guards[client]->unlock();
+                } else if (FD_ISSET(client, &writeset) && !FD_ISSET(client, &errorset)) {
+                    std::cout << "removeClient" << std::endl;
+                    this->removeClient(client);
                 }
             }
-                        //std::cout << "doThread circle ok" << std::endl;
+            //std::cout << "doThread circle ok" << std::endl;
         }
 
     }
@@ -216,15 +219,21 @@ namespace socketserver {
     }
 
     void socketserver::removeClient(int s_client) {
-                this->guard_s_server.lock();
-        //        //std::cout << "socketserver::removeClient(" << s_client << ")" << std::endl;
-                this->sockets.erase(find(this->sockets.begin(), this->sockets.end(), s_client));
-        //        //std::cout << "erased socket" << std::endl;
-                this->guards.erase(this->guards.find(s_client));
-        //        //std::cout << "erased guard" << std::endl;
-                this->write_guards.erase(this->write_guards.find(s_client));
-        //        //std::cout << "erased write_guard" << std::endl;
-                this->guard_s_server.unlock();
+        this->guard_s_server.lock();
+        vector<int>::iterator si = find(this->sockets.begin(), this->sockets.end(), s_client);
+        if (si != this->sockets.end()) {
+            this->sockets.erase(si);
+        }
+        map<int, mutex*>::iterator gi = this->guards.find(s_client);
+        if (gi != this->guards.end()) {
+            this->guards.erase(gi);
+        }
+        map<int, mutex*>::iterator wi = this->write_guards.find(s_client);
+        if (wi != this->write_guards.end()) {
+            this->write_guards.erase(gi);
+        }
+        ::close(s_client);
+        this->guard_s_server.unlock();
     }
 
     socketserver::~socketserver() {

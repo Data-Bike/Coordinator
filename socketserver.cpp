@@ -184,6 +184,7 @@ namespace socketserver {
                 fcntl(s_client, F_SETFL, O_NONBLOCK);
                 this->doClient(c_addr, s_client);
                 this->guard_s_server.unlock();
+                continue;
             }
             std::cout << "doThread isset server ok" << std::endl;
             for (int client : this->sockets) {

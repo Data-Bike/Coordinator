@@ -77,8 +77,8 @@ void contest() {
     sockaddr_in sa;
     sa.sin_family = AF_INET;
     sa.sin_port = htons(std::atoi(config["port"].c_str()));
-//    ::inet_aton("127.0.0.1", &sa.sin_addr);
-        ::inet_aton("188.40.41.20", &sa.sin_addr);
+    ::inet_aton("127.0.0.1", &sa.sin_addr);
+    //        ::inet_aton("188.40.41.20", &sa.sin_addr);
     //    std::cout << "address inited" << std::endl;
     int s_test = ::socket(AF_INET, SOCK_STREAM, 0);
     //    std::cout << "socket test:" << s_test << std::endl;
@@ -113,21 +113,21 @@ void contest() {
     msg.insert(msg.begin(), len_buf, len_buf + 4);
     //    std::cout << "len_msg_body sended:" << ::send(s_test, &len_msg_body, sizeof (len_msg_body), 0) << std::endl;
     std::cout << "msg sended:" << ::send(s_test, &msg[0], msg.size(), 0) << std::endl;
-    ::vector<unsigned char> ask_data(len_msg_body*10);
-    int recv_len=0;
-    recv_len=::recv(s_test, &ask_data[0], ask_data.size(), 0);
+    ::vector<unsigned char> ask_data(len_msg_body * 10);
+    int recv_len = 0;
+    recv_len = ::recv(s_test, &ask_data[0], ask_data.size(), 0);
     std::cout << "ask_data recved:" << recv_len << std::endl;
     ask_data.resize(recv_len);
     ::string ask_str(ask_data.begin(), ask_data.end());
-    ::string req_str(msg.begin()+4, msg.end());
+    ::string req_str(msg.begin() + 4, msg.end());
     if (!(req_str == ask_str)) {
         std::cout << "send:" << req_str << std::endl;
         std::cout << "recv:" << ask_str << std::endl;
         std::cout << "%TEST_FAILED% time=0 testname=askrequesttest (mainfunctiontest) message=error message sample" << std::endl;
     }
-    std::cout<<"close st"<<std::endl;
-//    ::close(s_test);
-    std::cout<<"close fn"<<std::endl;
+    std::cout << "close st" << std::endl;
+    //    ::close(s_test);
+    std::cout << "close fn" << std::endl;
 
 }
 

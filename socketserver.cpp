@@ -137,7 +137,7 @@ namespace socketserver {
 
     void socketserver::doThread(int id_thread) {
         //        //std::cout << "doThread init" << this->s_server << std::endl;
-        fd_set readset, writeset;
+        fd_set readset, writeset, errorset;
         sockaddr_in c_addr;
         socklen_t lenaddr = sizeof (c_addr);
         //        //std::cout << "doThread init ok" << std::endl;
@@ -188,7 +188,7 @@ namespace socketserver {
             //            //std::cout << "doThread isset server ok" << std::endl;
             for (int client : this->sockets) {
                 //                //std::cout << "doThread circle to test client:" << client << std::endl;
-                if (FD_ISSET(client, &readset) && FD_ISSET(client, &writeset) && !FD_ISSET(client, &errorset) && this->guards[client]->try_lock()) {
+                if (FD_ISSET(client, &readset) && FD_ISSET(client, &writeset) && this->guards[client]->try_lock()) {
                     //std::cout << "doThread circle to doSocket client:" << client << " thid:" << id_thread << std::endl;
                     this->doSocket(client);
                     this->guards[client]->unlock();

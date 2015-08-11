@@ -46,6 +46,7 @@ namespace coordinator {
             socketserver::socketserver::read(s_client, *len_data);
         } else {
             std::cout << " init recv failed client:" << s_client << std::endl;
+            ::close(s_client);
         }
     }
 

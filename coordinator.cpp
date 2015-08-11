@@ -40,17 +40,22 @@ namespace coordinator {
 
     void coordinator::doSocket(int s_client) {
         int *len_data = new int;
-        ::recv(s_client, len_data, sizeof (*len_data), 0);
-        socketserver::socketserver::read(s_client, *len_data);
+        int len_recv = ::recv(s_client, len_data, 4, 0);
+        if (len_recv != -1) {
+            std::cout << " init len_data=" << *len_data << " size len_data=" << sizeof (*len_data) << " size int=" << sizeof (int) << std::endl;
+            socketserver::socketserver::read(s_client, *len_data);
+        } else {
+            std::cout << " init recv failed client:" << s_client << std::endl;
+        }
     }
 
     void coordinator::removeClient(int s_client) {
-//        socketserver::socketserver::removeClient(s_client);
-//        std::cout << "socket removed" << std::endl;
-//        this->hashidsocket.erase(this->hashidsocket.find(this->sockethashid[s_client]));
-//        std::cout << "hashidsocket removed" << std::endl;
-//        this->sockethashid.erase(this->sockethashid.find(s_client));
-//        std::cout << "sockethashid removed" << std::endl;
+        //        socketserver::socketserver::removeClient(s_client);
+        //        //std::cout << "socket removed" << std::endl;
+        //        this->hashidsocket.erase(this->hashidsocket.find(this->sockethashid[s_client]));
+        //        //std::cout << "hashidsocket removed" << std::endl;
+        //        this->sockethashid.erase(this->sockethashid.find(s_client));
+        //        //std::cout << "sockethashid removed" << std::endl;
 
     }
 

@@ -194,7 +194,7 @@ namespace socketserver {
                     this->guards[client]->unlock();
                 } else if (!FD_ISSET(client, &writeset) || FD_ISSET(client, &errorset)) {
                     std::cout << "removeClient" << std::endl;
-                    this->removeClient(client);
+//                    this->removeClient(client);
                 }
             }
             //std::cout << "doThread circle ok" << std::endl;

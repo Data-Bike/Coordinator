@@ -150,11 +150,14 @@ namespace socketserver {
             //            //std::cout << "doThread circle" << std::endl;
             FD_ZERO(&readset);
             FD_ZERO(&writeset);
+            FD_ZERO(&errorset);
             FD_SET(this->s_server, &readset);
             if (this->sockets.size() > 0) {
                 for (int client : this->sockets) {
 //                    //std::cout << "client to set:" << client << std::endl;
                     FD_SET(client, &readset);
+                    FD_SET(client, &writeset);
+                    FD_SET(client, &errorset);
                 }
             }
             //            //std::cout << "doThread circle set ok" << std::endl;
@@ -185,7 +188,7 @@ namespace socketserver {
             //            //std::cout << "doThread isset server ok" << std::endl;
             for (int client : this->sockets) {
                 //                //std::cout << "doThread circle to test client:" << client << std::endl;
-                if (FD_ISSET(client, &readset) && this->guards[client]->try_lock()) {
+                if (FD_ISSET(client, &readset) && FD_ISSET(client, &writeset) && !FD_ISSET(client, &errorset) && this->guards[client]->try_lock()) {
                     //std::cout << "doThread circle to doSocket client:" << client << " thid:" << id_thread << std::endl;
                     this->doSocket(client);
                     this->guards[client]->unlock();
@@ -213,15 +216,15 @@ namespace socketserver {
     }
 
     void socketserver::removeClient(int s_client) {
-        //        this->guard_s_server.lock();
+                this->guard_s_server.lock();
         //        //std::cout << "socketserver::removeClient(" << s_client << ")" << std::endl;
-        //        this->sockets.erase(find(this->sockets.begin(), this->sockets.end(), s_client));
+                this->sockets.erase(find(this->sockets.begin(), this->sockets.end(), s_client));
         //        //std::cout << "erased socket" << std::endl;
-        //        this->guards.erase(this->guards.find(s_client));
+                this->guards.erase(this->guards.find(s_client));
         //        //std::cout << "erased guard" << std::endl;
-        //        this->write_guards.erase(this->write_guards.find(s_client));
+                this->write_guards.erase(this->write_guards.find(s_client));
         //        //std::cout << "erased write_guard" << std::endl;
-        //        this->guard_s_server.unlock();
+                this->guard_s_server.unlock();
     }
 
     socketserver::~socketserver() {

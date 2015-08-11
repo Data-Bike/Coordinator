@@ -174,7 +174,7 @@ namespace socketserver {
             std::cout << "doThread circle FD_SETSIZE ok:" << FD_SETSIZE << std::endl;
             if (::select(mx + 1, &readset, &writeset, &errorset, &timeout) < 0) {
                 std::cout << "::select(FD_SETSIZE, &readset, NULL, NULL, &timeout)<1" << std::endl;
-//                continue;
+                //                continue;
             };
             std::cout << "doThread circle select ok" << std::endl;
             if (FD_ISSET(this->s_server, &readset) && this->guard_s_server.try_lock()) {
@@ -220,18 +220,9 @@ namespace socketserver {
 
     void socketserver::removeClient(int s_client) {
         this->guard_s_server.lock();
-        vector<int>::iterator si = find(this->sockets.begin(), this->sockets.end(), s_client);
-        if (si != this->sockets.end()) {
-            this->sockets.erase(si);
-        }
-        map<int, mutex*>::iterator gi = this->guards.find(s_client);
-        if (gi != this->guards.end()) {
-            this->guards.erase(gi);
-        }
-        map<int, mutex*>::iterator wi = this->write_guards.find(s_client);
-        if (wi != this->write_guards.end()) {
-            this->write_guards.erase(gi);
-        }
+        this->sockets.erase(remove(this->sockets.begin(), this->sockets.end(), s_client), this->sockets.end());
+        this->guards.erase(s_client);
+        this->write_guards.erase(s_client);
         ::close(s_client);
         this->guard_s_server.unlock();
     }

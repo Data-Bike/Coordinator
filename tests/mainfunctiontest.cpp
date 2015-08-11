@@ -77,8 +77,8 @@ void contest() {
     sockaddr_in sa;
     sa.sin_family = AF_INET;
     sa.sin_port = htons(std::atoi(config["port"].c_str()));
-    ::inet_aton("127.0.0.1", &sa.sin_addr);
-    //    ::inet_aton("188.40.41.20", &sa.sin_addr);
+//    ::inet_aton("127.0.0.1", &sa.sin_addr);
+        ::inet_aton("188.40.41.20", &sa.sin_addr);
     //    std::cout << "address inited" << std::endl;
     int s_test = ::socket(AF_INET, SOCK_STREAM, 0);
     //    std::cout << "socket test:" << s_test << std::endl;
@@ -144,12 +144,12 @@ void askrequesttest() {
         std::cout << "cofig inited" << std::endl;
         coordinator::coordinator* coord = new coordinator::coordinator(config);
         std::cout << "coordinator created" << std::endl;
-        coord->play();
+//        coord->play();
         sleep(3);
         std::cout << "coordinator played" << std::endl;
         //        sleep(3);
         std::clock_t start = std::clock();
-        for (int i = 0; i < 200; i++) {
+        for (int i = 0; i < 10; i++) {
             contest();
             //                        sleep(1);
         }
@@ -166,7 +166,7 @@ void askrequesttest() {
         //        sleep(3);
 
 
-        coord->stop();
+//        coord->stop();
         std::cout << "coordinator stoped" << std::endl;
     } catch (std::exception &e) {
         std::cout << "%TEST_FAILED% time=0 testname=askrequesttest (mainfunctiontest) message=error message sample" << std::endl;

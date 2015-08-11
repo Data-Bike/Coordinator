@@ -41,7 +41,7 @@ namespace coordinator {
     void coordinator::doSocket(int s_client) {
         int *len_data = new int;
         int len_recv = ::recv(s_client, len_data, 4, 0);
-        if (len_recv != -1) {
+        if (len_recv == 4 && len_data>0) {
             std::cout << " init len_data=" << *len_data << " size len_data=" << sizeof (*len_data) << " size int=" << sizeof (int) << std::endl;
             socketserver::socketserver::read(s_client, *len_data);
         } else {

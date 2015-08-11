@@ -127,7 +127,7 @@ void contest() {
     }
     std::cout << "close st" << std::endl;
     //    ::close(s_test);
-    ::shutdown(s_test, 1);
+//    ::shutdown(s_test, 1);
     std::cout << "close fn" << std::endl;
 
 }

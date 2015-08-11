@@ -174,7 +174,7 @@ namespace socketserver {
             std::cout << "doThread circle FD_SETSIZE ok:" << FD_SETSIZE << std::endl;
             if (::select(mx + 1, &readset, &writeset, &errorset, &timeout) < 0) {
                 std::cout << "::select(FD_SETSIZE, &readset, NULL, NULL, &timeout)<1" << std::endl;
-                continue;
+//                continue;
             };
             std::cout << "doThread circle select ok" << std::endl;
             if (FD_ISSET(this->s_server, &readset) && this->guard_s_server.try_lock()) {

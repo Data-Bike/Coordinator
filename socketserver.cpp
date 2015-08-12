@@ -172,9 +172,16 @@ namespace socketserver {
             }
             std::cout << "doThread circle max ok:" << mx << std::endl;
             std::cout << "doThread circle FD_SETSIZE ok:" << FD_SETSIZE << std::endl;
-            if (::select(mx + 1, &readset, &writeset, &errorset, &timeout) < 1) {
+            int select_res = 1;
+            if ((select_res = ::select(mx + 1, &readset, &writeset, &errorset, &timeout)) < 1) {
                 std::cout << "::select(FD_SETSIZE, &readset, NULL, NULL, &timeout)<1" << std::endl;
-                                continue;
+                for (int client : this->sockets) {
+                    if (!FD_ISSET(client, &writeset) || FD_ISSET(client, &errorset)) {
+                        std::cout << "removeClient select" << std::endl;
+                        this->removeClient(client);
+                    }
+                }
+                continue;
             };
             std::cout << "doThread circle select ok" << std::endl;
             if (FD_ISSET(this->s_server, &readset) && this->guard_s_server.try_lock()) {
@@ -224,7 +231,7 @@ namespace socketserver {
         this->sockets.erase(remove(this->sockets.begin(), this->sockets.end(), s_client), this->sockets.end());
         this->guards.erase(s_client);
         this->write_guards.erase(s_client);
-//        ::close(s_client);
+        //        ::close(s_client);
         this->guard_s_server.unlock();
     }
 

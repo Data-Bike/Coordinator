@@ -127,7 +127,7 @@ void contest() {
     }
     std::cout << "close st" << std::endl;
     //    ::close(s_test);
-//    ::shutdown(s_test, 1);
+    ::shutdown(s_test, 1);
     std::cout << "close fn" << std::endl;
 
 }
@@ -152,6 +152,7 @@ void askrequesttest() {
         std::clock_t start = std::clock();
         for (int i = 0; i < 10; i++) {
             contest();
+            sleep(1);
             //                        sleep(1);
         }
 

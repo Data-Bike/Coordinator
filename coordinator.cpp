@@ -41,18 +41,16 @@ namespace coordinator {
     void coordinator::doSocket(int s_client) {
         int *len_data = new int;
         int len_recv = ::recv(s_client, len_data, 4, 0);
-        if (len_recv == 4 && len_data>0) {
+        if (len_recv == 4 && len_data > 0) {
             std::cout << " init len_data=" << *len_data << " size len_data=" << sizeof (*len_data) << " size int=" << sizeof (int) << std::endl;
             socketserver::socketserver::read(s_client, *len_data);
         } else {
-            std::cout << " init recv failed client:" << s_client << std::endl;
+            std::cout << " init recv failed client:" << s_client << "len_recv=" << len_recv << "len_data=" << len_data << std::endl;
             this->removeClient(s_client);
             std::cout << " init recv failed client fn:" << s_client << std::endl;
-//            ::close(s_client);
+            //            ::close(s_client);
         }
     }
-
-
 
     coordinator::~coordinator() {
     }

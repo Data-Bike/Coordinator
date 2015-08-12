@@ -227,10 +227,15 @@ namespace socketserver {
     }
 
     void socketserver::removeClient(int s_client) {
+        std::cout << "removeClient(" << s_client << ")" << std::endl;
         this->guard_s_server.lock();
+        std::cout << "removeClient this->sockets.erase" << std::endl;
         this->sockets.erase(remove(this->sockets.begin(), this->sockets.end(), s_client), this->sockets.end());
+        std::cout << "removeClient this->guards.erase" << std::endl;
         this->guards.erase(s_client);
+        std::cout << "removeClient this->write_guards" << std::endl;
         this->write_guards.erase(s_client);
+        std::cout << "removeClient this->guards.erase" << std::endl;
         //        ::close(s_client);
         this->guard_s_server.unlock();
     }

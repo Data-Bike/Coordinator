@@ -47,6 +47,7 @@ namespace coordinator {
         } else {
             std::cout << " init recv failed client:" << s_client << std::endl;
             this->removeClient(s_client);
+            std::cout << " init recv failed client fn:" << s_client << std::endl;
 //            ::close(s_client);
         }
     }

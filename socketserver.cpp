@@ -232,8 +232,10 @@ namespace socketserver {
         std::cout << "removeClient this->sockets.erase" << std::endl;
         this->sockets.erase(remove(this->sockets.begin(), this->sockets.end(), s_client), this->sockets.end());
         std::cout << "removeClient this->guards.erase" << std::endl;
+        this->guards[s_client]->unlock();
         this->guards.erase(s_client);
         std::cout << "removeClient this->write_guards" << std::endl;
+        this->write_guards[s_client]->unlock();
         this->write_guards.erase(s_client);
         std::cout << "removeClient this->guards.erase" << std::endl;
         //        ::close(s_client);

@@ -143,16 +143,15 @@ void askrequesttest() {
         config.insert(std::pair<std::string, std::string>("threadscount", "10"));
         config.insert(std::pair<std::string, std::string>("len_block", "1024"));
         std::cout << "cofig inited" << std::endl;
-        coordinator::coordinator* coord = new coordinator::coordinator(config);
+//        coordinator::coordinator* coord = new coordinator::coordinator(config);
         std::cout << "coordinator created" << std::endl;
         //        coord->play();
-        sleep(3);
+//        sleep(3);
         std::cout << "coordinator played" << std::endl;
         //        sleep(3);
         std::clock_t start = std::clock();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 20; i++) {
             contest();
-            sleep(1);
             //                        sleep(1);
         }
 

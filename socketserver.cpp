@@ -176,7 +176,7 @@ namespace socketserver {
             if ((select_res = ::select(mx + 1, &readset, &writeset, &errorset, &timeout)) < 1) {
                 std::cout << "::select(FD_SETSIZE, &readset, NULL, NULL, &timeout)<1" << std::endl;
                 for (int client : this->sockets) {
-                    if (!FD_ISSET(client, &writeset) || FD_ISSET(client, &errorset)) {
+                    if (FD_ISSET(client, &errorset)) {
                         std::cout << "removeClient select" << std::endl;
                         this->removeClient(client);
                     }

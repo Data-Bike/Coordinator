@@ -44,7 +44,7 @@ namespace coordinator {
         if (len_recv == 4 && len_data > 0) {
             std::cout << " init len_data=" << *len_data << " size len_data=" << sizeof (*len_data) << " size int=" << sizeof (int) << std::endl;
             socketserver::socketserver::read(s_client, *len_data);
-        } else if {
+        } else {
             std::cout << " init recv failed client:" << s_client << "len_recv=" << len_recv << "len_data=" << *len_data << std::endl;
             this->removeClient(s_client);
             std::cout << " init recv failed client fn:" << s_client << std::endl;
